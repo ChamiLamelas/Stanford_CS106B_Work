@@ -1,0 +1,21 @@
+6a) I would use quick sort over merge sort in a situation where memory is restricted. This is because quick sort does not require the extra memory
+merge sort requires in the merging process. I would use merge sort over quick sort in a situation where extra memory isn't a concern and you know
+that the input data would cause quick sort to devolve to O(N^2).
+
+6b) 
+
+                    24
+        8                           30
+1               16          25              42
+    9              18            29
+
+6c) False. Counter example: { 100, 80, 90, 50, 40, 60 }. Preorder traversal: 100, 80, 50, 40, 90, 60
+
+6d) The directed acyclic word graph's ability to combine words with similar starts and endings allowed the input data (1 MB) to be compressed as 
+words were no longer stored uniquely but could be built via interpreting paths in the graph. Furthermore, the the dawg also improved the ability
+to search for prefixes to be O(P) where P was the length of the prefix. Since a string phrase (like a prefix) had been reduced to a path of characters
+in the graph, the dawg could start at the first character of the prefix and see if there was a path that contained the P characters in the prefix.
+If the sequence of characters in the prefix led to nowhere, it wasn't a prefix. The dawg also took advantage of the C++ ability to compress data to 
+the specific number of bits that is actually required by this project. In this case, a word is made up of only the letters A-Z which can be expressed
+in 5 bits (not the full 8 required by all 256 ASCII characters). By compressing other component's of a graph node structure, further compression could
+be done of the input data, to the point where a graph node structure took up only 4 bytes. 

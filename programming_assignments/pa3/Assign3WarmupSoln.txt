@@ -1,0 +1,79 @@
+// Here are the solutions to the warmup problems given in Assignment 3.
+
+/*
+ * Function: PrintInBinary
+ * -----------------------
+ * Uses recursion to print the binary representation (base-two) of 
+ * a given number. The parameter is expected to be non-negative.
+ */
+void PrintInBinary(int number)
+{
+    if (number > 1)
+        PrintInBinary(number/2);	// recursively print rest of binary digits
+    cout << (number % 2);	      // now print least signficant binary digit
+}
+
+
+
+/* 
+ * Function: RecSum
+ * ----------------
+ * Recursive function to explore all possible subsets in attempt to
+ * find one that sums to target value.   The parameters are the vector 
+ * of numbers, the index of the next element to consider, the sum so far, 
+ * and the target value.  If the sum so far is equal to the target, we
+ * have found the desired subset and can immediately return true.
+ * If we have run out of elements to try, we return false.  Otherwise, 
+ * take the next vector element and try it both in and out, stopping as soon
+ * as we find a successful subset. This in-out pattern is commonly
+ * used for any sort of subset/power-set exploration.
+ */
+
+bool RecSum(Vector<int> & nums, int index, int sumSoFar, int target)
+{
+    if (sumSoFar == target) return true; 	// success base case
+    if (index == nums.size()) return false;	// failure base case
+
+		// recursive case, try next element both in and out of the sum
+    return RecSum(nums, index+1, sumSoFar, target) ||  
+           RecSum(nums, index+1, sumSoFar+nums[index], target);
+}
+
+/* 
+ * Function: AltRecSum
+ * -------------------
+ * Same goal as function RecSum described above, but uses a different
+ * recursive pattern to compute result.  Instead of considering one
+ * element at each call and trying it both in/out, this version 
+ * chooses an element to add on each call by picking one of the
+ * remaining elements and discarding any elements in between.
+ * This is the choose-one-of-remaining pattern, such as used
+ * for generating permutations.
+ */
+bool AltRecSum(Vector<int> & nums, int index, int sumSoFar, int target)
+{
+    if (sumSoFar == target) return true; 	// success base case
+      // can include same explicit failure case as above, or let fall
+      // through (loop will not execute)
+	
+    for (int i = index; i < nums.size(); i++) {
+        if (RecSum(nums, i+1, sumSoFar+nums[i], target))
+	      return true;
+    }
+    return false;
+}
+
+
+/* 
+ * Function: CanMakeSum
+ * --------------------
+ * Given an vector of numbers and a target sum, reports whether any
+ * subset of the numbers in the array sum to that target.  This is
+ * just a wrapper for the recursive function RecSum (or could call
+ * AltRecSum for same result).
+ */
+bool CanMakeSum(Vector<int> & nums, int targetSum)
+{
+    return RecSum(nums, 0, 0, targetSum);
+}
+

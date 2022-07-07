@@ -1,0 +1,103 @@
+Selection sort is O(n^2) on any data 
+Merge sort is O(nlog_2(n)) on any data 
+Binary search is O(log_2(n)) on sorted data 
+Linear search is O(n) on any data 
+
+2a) 
+
+Selection sort on 16 elements: 
+
+Using the linear search approach, k searches would result in 16k operations being performed.
+First sorting the data using selection sort and then running k binary searches would result in 16^2 + log_2(16)k operations being performed. 
+
+To see how many binary searches have to be done to "buy back" the sorting cost, find the value of k for which 16k becomes larger than 16^2 + log_2(16)k 
+
+16(1) < 16^2 + 4(1) 
+16(2) < 16^2 + 4(2)
+.
+.
+.
+16(16) < 16^2 + 4(16)
+.
+.
+.
+16(20) < 16^2 + 4(20)
+   320 < 256 + 80  
+   320 < 336
+16(21) < 16^2 + 4(21)
+   336 < 256 + 84
+   336 < 340 
+16(22) > 16^2 + 4(22)
+   352 > 256 + 88
+   352 > 344 
+
+Therefore, k = 22 
+
+Merge sort on 16 elements: 
+
+Again, using linear search, k searches would result in 16k ops. being performed. 
+Sorting the data using merge sort and then running k binary searches would result in 16*log_2(16) + log_2(16)k ops. being performed. 
+
+To see how many binary searches have to be done to "buy back" the sorting cost, find the value of k for which 16k becomes larger than 16*log_2(16) + log_2(16)k
+
+16(1) < 16*4 + 4(1)
+.
+.
+.
+16(4) < 16*4 + 4(4)
+16(5) < 16*4 + 4(5)
+   80 < 64 + 20 
+   80 < 84
+16(6) > 16*4 + 4(6)
+   96 > 64 + 24
+   96 > 88
+
+Therefore, k = 6 
+
+2b) 
+
+Selection sort on 1024 elements:
+
+Using linear search, k searches would result in 1024 ops. being performed. 
+Sorting the data using selection sort and then running k binary searches would result in 1024^2 + log_2(1024)k ops. being performed. 
+
+To see how many binary searches have to be done to "buy back" the sorting cost, find the value of k for which 1024k becomes larger than 1024^2 + log_2(1024)k
+
+1024(1) < 1024^2 + 10(1)
+.
+.
+.
+1024(1024) < 1024^2 + 10(1024) 
+.
+.
+.
+1024(1024+10) < 1024^2 + 10(1024+10)
+    1,058,816 < 1,048,576 + 10,340    
+    1,058,916 < 1,058,916 
+1024(1024+11) > 1024^2 + 10(1024+11)
+    1,059,840 > 1,048,576 + 10,350 
+    1,059,840 > 1,058,926
+
+Therfore, k = 1024+11 = 1035
+
+Merge sort on 1024 elements: 
+
+Again, using linear search, k searches would result in 1024k ops. being performed. 
+Sorting the data using merge sort and then running k binary searches would result in 1024*log_2(1024) + log_2(1024)k ops. being performed. 
+
+To see how many binary searches have to be done to "buy back" the sorting cost, find the value of k for which 1024k becomes larger than 1024*log_2(1024) + log_2(1024)k
+
+1024(1) < 1024*10 + 10(1)
+.
+.
+.
+1024(10) < 1024*10 + 10(1)
+          1024(11) >  1024*10 + 10(11)
+1024(10) + 1024(1) > 1024(10) + 10(11)
+           1024(1) > 10(11)
+
+Therefore, k = 11 
+
+
+
+    

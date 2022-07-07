@@ -1,0 +1,95 @@
+void PopRocks(Cell * & mikey)
+{
+    Cell *ptr;
+    for (ptr = mikey; ptr->next != NULL; ptr = ptr->next)
+    {
+    /* Note: loop body intentionally left empty */
+    }
+    ptr->next = mikey;
+    ptr = ptr->next;
+    mikey = mikey->next;
+    ptr->next = NULL;
+}
+
+For a non empty list L made up of a sequence of k nodes n1->n2->...->nk, PopRocks(L) moves L up one node to point to n2 while still keeping n1 in the list by appending it to the end.
+Thus, after the method ends, L would look like n2->n3->...->nk->n1 where L is now a reference to n2.
+
+The first example has an in-depth trace, the following 2 have less detailed traces. 
+
+Example: L is 15 -> 30 -> 45 -> 60 
+
+main: 
+    L points to 15
+    call is made to PopRocks with arg. L
+
+    list looks like: 
+    30 -> 45 -> 60 -> 15
+
+PopRocks: 
+    mikey is an alias of L 
+    a node pointer is declared call ptr 
+    for loop starts 
+    ptr is made as a copy of mikey, pointing to 15 
+    it is moved to 30, 45, then 60 where at the last node sees it has no successor 
+    for loop exits 
+    the successor of ptr (pointing at 60) is made to be mikey. That is, ptr->next points to the same data as mikey. Thus, a circular linked list is created. 
+
+    list looks like: 15 -> 30 -> 45 -> 60 --
+                     ^                     |
+                     |                     |
+                     -----------------------    
+
+    ptr is set to equal the value of its dereferenced next field. That is, ptr now points to 15.
+    mikey is set to equal the value of its dereferenced next field. That is, mikey - and L - now point to 30. 
+    ptr now has its sucessor set to equal NULL. That is, a link is broken and 15 now no longer has a successor of 30.
+
+    list looks like: 15 x 30 -> 45 -> 60 ---  where "x" represents the most recently broken link.
+                     ^                     |
+                     |                     |
+                     -----------------------  
+                    
+Example: L is s -> t -> a - r 
+
+main: 
+    L points to s 
+    PopRocks(L)
+
+    list looks like: t -> a -> r -> s
+
+PopRocks:
+    mikey is alias of L 
+    ptr declared 
+    ptr = s, ptr = t, ptr = a, ptr = r (r has no next)
+    r now has sucessor mikey (i.e. s)
+
+    list: s -> t -> a -> r --
+          ^                 |
+          |                 |
+          ------------------- 
+                              
+    ptr is moved to point to s (r's sucessor)
+    mikey and L are moved to point to t 
+    ptr.next = NIL link broken between s & t
+    
+Example: L is Go -> hang -> a -> salami, -> I'm -> a -> lasagna -> hog!
+
+main: 
+    L points to Go
+    PopRocks(L)
+
+    list looks like: hang -> a -> salami, -> I'm -> a -> lasagna -> hog! -> Go
+
+PopRocks:
+    mikey is alias of L 
+    ptr declared 
+    ptr = Go, ptr = hang, ptr = a, ptr = salami, ptr = I'm, ptr = a, ptr = lasagna, ptr = hog! 
+    ptr's sucessor is set to be mikey, circular list created: 
+
+    Go -> hang -> a -> salami, -> I'm -> a -> lasagna -> hog! --
+    ^                                                          |
+    |                                                          |
+    ------------------------------------------------------------
+
+    ptr is moved to its next (now points to Go)
+    mikey (and L) is moved to its next (now points to hang)
+    ptr's next is now set to NULL, link broken between Go and hang

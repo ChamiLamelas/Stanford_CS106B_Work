@@ -1,0 +1,53 @@
+/*
+1a) 
+
+In C++ a class is used to provide an abstraction of some entity that could be as simple as a (x, y) point on the Cartesian plane or 
+as complex as a data structure like a map. A class typically contains private data and public behavior. That is, the user is provided
+access to member functions or methods which allow them to perform actions on an object of that class. These actions typically involve
+reading and/or editing the object's state. A good class will never get into some malformed state where it is unusable. Thus, it is
+important to make its internal data - on which the class is actually built - private. That way, users cannot change the internal data
+and destroy the ability of the class to function properly. To allow the user to edit the object's state, provide public member functions
+which make sure that any changes the user wishes to do does not put the class in some bad state. The idea of splitting a class into 
+public member functions and private data/members is referred to as the wall of abstraction. That is, the user does not know anything
+about the internal data itself, they only know about the state of the object which is reported through member functions which may be
+filtering/representing the internal data in such a way that the user benefits from it. 
+
+1b)
+
+The implementer benefits from object-oriented programming because by hiding the internal data and only providing an interface of
+communication through public member functions allows the implementer to control what the client can do and allows the implementer
+to change the internal implementation of the class whenever they choose. For example, for a Stack, if the implementer decided that
+a Linked List was better than a Vector, they could change the internal implementation without the client ever knowing, as long as 
+they maintain the same interface of public member functions. 
+
+There are also benefits to the user of public & private access specifiers. Consider a Stack data structure for example. The user only
+wishes to be able to perform the following set of operations: pushing, popping, peeking, and checking the size. The user does not 
+need to know how these operations will be  performed internally; it could be using a vector or a linked list for example. By keeping 
+the internal data safe and private and allowing user interaction through public member functions (that would correspond to the 
+desired operations), the client can interact through those methods without disturbing the internal vector or linked list. 
+
+1c)
+
+a) In this case, there is no point in using a class at all, just use a struct. It goes against the OO-programming idea because the 
+client can now edit the data in the rectangle however they like it which could put an object of the class in a malformed state. 
+Furthermore, there is no abstraction in this case. The user is no longer working with a "rectangle" but more a "width, height, 
+x, and y". The client should receive a rectangle and the ability to perform common ops. on one (perimeter, area, etc.). The
+implementer should be the only one who decides/knows how to represent one in code.
+
+b) This option is a slight improvement over part a because now the user can no longer access the internal data directly. Thus, the
+object can never get into some malformed state. However, I say this is only a slight improvement because the user still does not
+have the ability to simply get the perimeter from a rectangle, they have to calculate it still. Thus, it isn't much improvement
+in the usability regard over part a. 
+
+c) While it is true that the user can now access the perimeter from a rectangle, which is what we wanted at the end of part b, this
+creates 2 major flaws. The first being that the perimeter does not define a rectangle. That is, the members should be variables that
+represent the class such as the width, height, x, and y. The second issue is the user can now simply change the perimeter to something
+other than 2*length + 2*width and the object would be put into a malformed/bad state. 
+
+d) This is the best solution. Since the perimeter does not define a rectangle, and is merely a property of a rectangle that a client
+would want, it is best suited as a public member function. All the client wants is the ability to have a Rectangle data type which
+can supply information such as a perimeter or area. The implementer can choose how to represent a Rectangle in such a way that the 
+abilities the user wants it to have can be implemented efficiently. For example, using length, width data fields allows a very simple
+calculation of the perimeter (a sequence of simple arithmetic ops. 2*length + 2*width). 
+ */
+

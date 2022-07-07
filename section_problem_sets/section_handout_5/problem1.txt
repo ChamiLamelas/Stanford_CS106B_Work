@@ -1,0 +1,104 @@
+1a)
+
+int Mystery1 (int n)
+{
+    int sum = 0;                                    
+    for (int i = 0; i < n; i++)                     
+    {           
+        for (int j = 0; j < i; j++)                 
+        {
+            sum += i * j;
+        }
+    }
+    return (sum);
+}
+
+The inner loop will run first 0 times, then 1 time, then 2 times, and all the way up to n-2 times. Using Gauss's summation formula, this sum can be approximated to be of order n^2. 
+Hence, this algorithm is O(n^2).
+
+1b)
+
+int Mystery2 (int n)
+{
+    int sum = 0;
+    for (int i = 0; i < 10; i++)
+    {
+        for (int j = 0; j < i; j++)
+        {
+            sum += j * n;
+        }
+    }
+    return (sum);
+}
+
+The inner loop will run first 0 times, then 1 time, then 2 times, and all the way up to 8 times. This happens regardless of the value of the input paramter n. Therefore, this
+algorithm is constant time, that is O(1).
+
+1c)
+
+int Mystery3(int n) {
+    if (n <= 1) return 1; 
+    return (Mystery3(n/2)+1);
+}
+
+The recurrence relation for this function is: 
+
+T(n) = c            for n <= 1
+T(n) = T(n/2) + b   for n > 1 
+
+Using the substitution method: 
+
+T(n/2) = T(n/4) + b
+T(n/4) = T(n/8) + b
+
+T(n) = ((T(n/8) + b) + b) + b = T(n/2^3) + 3b 
+
+For some integer k: T(n) = T(n/2^k) + kb
+
+The base case is reached when 2^k = n 
+Rearrange to solve for k = log_2(n)
+
+Therefore, T(n) = T(n/n) + log_2(n)*b = T(1) + b*log_2(n) 
+Thus, the algorithm is O(log_2(n))
+
+1d) 
+
+int Mystery4(int n) {
+    return Pinky(0, n);
+}
+
+int Pinky(int a, int b) {
+    if (a == b) {
+        return 0;
+    }
+    else {
+        return Pinky(a+1, b) + Pinky(a, b-1);
+    }
+}
+
+The recurrence relation for this function is: 
+
+T(n) = c                for n = 0
+T(n) = 2T(n - 1) + b    for n > 0
+
+Using a recurrence tree: 
+Level:                  Tree:                       Work:
+0                       T(n)                        b = 1b = 2^0b  
+1           T(n-1)                  T(n-1)          b + b = 2b = 2^1b
+2       T(n-2)  T(n-2)          T(n-2)  T(n-2)      b + b + b + b = 4b = 2^2b
+.       .                                           .
+.       .                                           .
+.       .                                           .
+k       T(n-k)   at some level k                    b + b + ... + b = 2^kb
+
+To hit the base case, k must be n. Therefore, the height of the tree is n. 
+The runtime function is then equal to f(n) = b + 2b + 4b + ... + 2^nb = b(1 + 2 + 4 + ... + 2^n)
+
+Let s = 1 + 2 + 4 + ... + 2^n
+Therefore, 2s = 2 + 4 + 8 + ... + 2^n + 2^(n+1)
+s = 2s - s = 1 + 2^(n+1)
+
+Thus, f(n) = b(1 + 2^(n+1)) which is O(2^n)
+
+
+

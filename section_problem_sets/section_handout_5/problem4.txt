@@ -1,0 +1,12 @@
+BFS visits all the paths regardless, while DFS does not necessarily visit all them if it gets lucky and finds a path. However, DFS still has the potential of having to run through 
+all paths before the maze before reaching a conclusion. Thus, they have the same runtime. 
+
+From soln. manual: BFS uses more memory because it builds up all the paths while DFS looks at only 1 path at a time. 
+
+From soln. manual: O(l*w) because there a l*w squares in the maze to look at
+
+No, BFS would return the shortest path as it tries path possibilities from shortest -> longest. DFS on the other hand will go down the first path it encounters until it fails
+or succeeds. Therefore, it is entirely possible for DFS to find a completely different, longer path than BFS. This is because DFS doesn't consider length and instead just follows
+a path blindly.
+
+An example maze would be one that the first path DFS chooses to visit works but is longer than the shortest possible path which would be discovered by BFS. 

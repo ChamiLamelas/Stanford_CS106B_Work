@@ -1,0 +1,17 @@
+2a) The height of the tree is defined as the number of nodes on the longest path from a leaf to the root. Greene to Weaver is the longest path and is made up of 4 notes. Hence, 
+the height of the tree is 4. The following nodes have no children and are leaves: Benton, Hathaway, Weaver. Morganstern has 1 node on its level in the tree: Carter. Therefore,
+Carter is its only sibling. 
+
+2b)
+    Preorder: Greene, Carter, Benton, Morganstern, Hathaway, Ross, Weaver
+    Inorder: Benton, Carter, Greene, Hathaway, Morganstern, Ross, Weaver 
+    Postorder: Benton, Carter, Hathaway, Weaver, Ross, Morganstern, Greene
+
+2c) Del Amico would end up as Carter's right child. 
+
+2d) Greene was the 1st node entered into the tree. 
+
+2e) This algorithm is the level order traversal algortihm. That is, the algorithm visits the nodes level by level starting from the root's level. For this tree, the order would
+be: Greene, Carter, Morganstern, Benton, Hathaway, Ross, Weaver. This algorithm is also known as Breadth First Search because it first visits the root, then nodes that are 1
+level away, then 2 levels, and so on. 
+

@@ -1,0 +1,18 @@
+3a) Suppose that you time how long it takes to make one contains call on a set object with some number of elements n. Call it t. 
+Knowing this, update the input size to 2n, then 4n, and so on. Record the time it takes to perform a contains call for each input size. If for each input size kn, the time 
+it takes is equal to k^2*t, that would mean contains is O(N^2). If the time is k*t, then contains is O(N). If for input size kn, the time remains to be approximately t, that 
+would imply contains is O(1). These are not all the possible runtimes of contains (could be O(log(N)), O(NlogN), O(N^3), etc.) but this demonstrates how one can approximate
+the runtime by comparing contains() times for different input sizes. 
+One should consider all possible inputs, and in the case of contains() that would definitely include inputs that are not in the set. By considering all possible inputs (or as
+many as you can, you are more likely to determine the average and worst case runtimes and have less likelihood being tricked by the best case runtime). Consider a linked list
+for example. If you ran searches on the list with inputs only being close to the head and time it for many different sizes you may think a linked list's search function is 
+O(1). However, if you searched for elements that you knew weren't in the list for different input sizes and timed search() you'd quickly see the search is O(N) as each 
+element in the list is visited. Thus, one can use a similar investigation on a set to get a better idea of what the runtime of set.contains() is.
+
+3b) In order to count the number of comparisons a given function is doing, you would need access to the function's implementation. That way, you could identify where comparisons
+are being done (say though the <,>,= operators or through some callback function) and create a counter variable that updates at that point in the code. However, this is considered
+bad style because then you are gaining access to the set's implementation. This goes against the fundamentals of object oriented programming (i.e. the wall of abstraction) which
+means for containers like a set to provide an interface to the user and hide its internal implementation. 
+
+3b soln.) Create a global variable, say compCount. Then, write a callback function that updates compCount whenever it is executed. Then, pass the Set the callback function
+to do the comparisons. Global variables are generally considered poor programming practice, but this is the only way to gain access into the Set's operations.

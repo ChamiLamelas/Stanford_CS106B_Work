@@ -1,0 +1,34 @@
+Stack
+
+--------------------------------------------
+
+from "Battle()" invoked by "main()":
+    pos = string::npos 
+    name = "umpy ad Student" 
+    
+    zuko (ref. to "tom" in "main()"): 
+        zuko.name = "Grumpy Grad Student" 
+        zuko.evilPlan = "Clowning" 
+        zuko.attackLevel = 15
+
+    aang (copy of "julie" in "main()"):
+        aang.name = "Big Baby" 
+        aang.weakness = "Gr" 
+        aang.powerLevel = 15
+
+from "main()": 
+    julie: 
+        julie.name = "Super Lecturer"
+        julie.weakness = "Gr"
+        julie.powerLevel = 60
+
+    tom: 
+        tom.name = "Grumpy Grad Student" 
+        tom.evilPlan = "Clowning" 
+        tom.attackLevel = 15 
+
+Heap 
+
+--------------------------------------------
+
+No variables were allocated dynamically: all structs and primitive variables were allocated in the stack. Hence, the heap is empty. 

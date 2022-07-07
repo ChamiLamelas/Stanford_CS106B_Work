@@ -1,0 +1,213 @@
+5a) 
+
+Scenario 1: I would use a vector to implement the Calendar in this case. To do this, first assign each data from Jan. 1 to Dec. 31 a number. That number 
+will be the date's index in the vector. At each entry, have a sorted singly linked list to hold all the Event structures on that day. 
+
+Runtime of displayByDate(): 
+
+The main reason I chose vector is it because it performs random access very well. That is, given a date as an index, it will retrieve the singly
+linked list at that position in constant time. Then, once you have the sorted singly linked list, simply iterate over the list, displaying each
+event (because the list is already sorted). This will be O(N) with N=no. of Events at the index due to the loop iteration.
+
+Due to the random access requirement, the following structures can immediately be eliminated: linked list based stack, linked list based queue,
+and heap-based priority queue.
+
+Memory Use of vector-based Calendar: 
+
+Since we know the range of the data ahead of time, it would make sense to use a contiguous data structure such as an array or vector. A dynamic
+data structure using pointers such as a Set or balanced BST would not make sense due to their pointer overhead for each Event and their inability
+to perform random access in constant time. 
+
+I did not think a hash table (or map) was necessary because it seemed straightforward to assign Jan. 1 index 0, and any other date an index of the
+number of days between Jan. 1 and that date. A hash table would be more useful if a more complex function was required to map a given input date
+into a table index that wasn't sequential. Another reason to not use a hash table is because the table would keep resizing (and rehashing) if the
+table grew too full because the table doesn't want collisions. Therefore, in this scenario, a hash table could possibly take up much more space 
+than a vector (maybe 2x as much). 
+
+Since we also know that most dates have at least one Event in the calendar, most of the vector will be occupied. Therefore, there won't be large
+areas of empty space, which is something to watch out for with contiguous memory-based data structures. To also save space, I used singly linked
+lists at each vector entry to limit pointer overhead while O(N) search of a given date's Events was still gauranteed.
+
+Ease of Coding/Understanding for further improvements (scalability):
+
+I would say this structure is quite easy to code given that it uses the 2 introductory data structures of this course: the vector (which essentially
+works like an array) and a singly linked list. To implement displayByDate(), all the user needs to know is how to access a given index in a vector
+and traverse a singly linked list in a while loop. 
+
+General Implementation/Pseudocode:
+
+class Calendar {
+    private:
+        struct nodeT* {
+            Event event;
+            nodeT *next;
+        };
+
+        vector<nodeT*> table;
+
+    public: 
+        displayByDate(date) {
+            index = date - Jan. 1
+            node = table[index]
+            while node != NULL do
+                display node->event
+                node = node->next    
+        }
+
+        // other member functions 
+};
+
+Soln. comment on Scenario 1: Can use static array in place of a vector here to minimize overhead. (I did not know this was an option and would
+follow my argument for vector of the ones that were provided).
+
+Scenario 2: I would use a set/balanced binary search tree in this case where each BST node would have a key that is the date and an associated value
+that is a sorted singly linked list of events that occur on that date. Furthermore, the tree would only contain nodes with dates that have events.
+By key I mean the portion of the node data that is considered in the comparison of 2 BST nodes. If using a set instead of a raw balanced BST, one
+would have to pass a comparison callback function to do this specific comparison in the implementation.
+
+Runtime of displayByDate(): 
+
+Since the tree is made up of nodes that only correspond to dates that have events and is balanced, the runtime to search for a given date key is
+O(log(D)) where D = no. of dates with events. To display the events on that date in sorted order is O(N) because one has to simply traverse the
+sorted SLL stored in the node with the searched date.
+
+The following data structures can immediately removed from consideration: Stack (no need for LIFO ordering), Queue (no need for FIFO ordering), 
+Grid (no need for 2D array representation), and priority queue (no need for heap-based representation).
+
+Memory Use of Balanced BST-based Calendar: 
+
+One drawback of this implementation is the pointer overhead. Each BST node holds pointers to the left and right children which means 8 bytes of 
+extra data for each date. However, by comparison to the actual size of each Event, I would guess this is relatively small. Since each Event contains
+2 strings (one that could possibly be large i.e. the description) which are made up of 1 byte ASCII characters, a time field, and an integer duration
+(the last of which is equivalent in size to a pointer), the 8 bytes of pointers doesn't seem too large.
+
+Furthermore, there does not seem to be a better alternative in terms of memory use. If one were to allocate a vector for the entire range of time
+these events fall in, there would be large amounts of contiguous empty space. While O(N) date look up would be gauranteed, using this implementation
+would make the pointer overhead used by the balanced BST as minute by comparison. One could consider using a hash table because one of the strengths
+of a hash table is taking a wide domain of possible inputs and compressing it into a smaller domain via hashing. However, this would involve having
+to write an appropriate hash function that could do this and if its not written correctly, there could be large amounts of wasted contiguous memory.
+Furthermore, if the bucket sizes grow too large where a bucket is not made up of events but a linked list of dates which each to point to a linked
+list of events, then the time it takes to find a date would increase as the bucket's list has to be traversed. 
+
+Ease of Coding/Scalability:
+ 
+A balanced BST is by no means an easy structure to create as it involves pointers and rebalancing. However, one consolation is that removal from
+the tree doesn't have to be considered in optimizing displayByDate(). The only rebalancing that has to take place would have to be after a search.
+If using an AVL tree, this would be nonexistent as all rebalancing would have to be done in the insertion. However, if one used a Splay Tree,
+splaying would have to be performed after a search. By avoiding removal rebalancing, it makes the level of coding somewhat easier.
+
+As discussed above, the hash map - the closest competitor to the balanced BST in this scenario of the Calendar - does not seem signifcantly easier
+to code either. In order for it to work properly, a hash function must be created that doesn't cause too much contiguous memory waster and make
+sure that the bucket sizes remain small (more specifically, small enough to keep displayByDate() runtime less than or equal to O(log(D) + N)).
+
+General Implementation/Pseudocode:
+
+class Calendar {
+    private:
+        struct nodeT {
+            nodeT *left, *right;
+            date key
+            SLL of Events
+        };
+
+        // depending on implementation may also require a comparison function for nodes if using a strict C++ set 
+        nodeT* root;
+
+    public:
+        displayByDate(date) {
+            get node with this date via BST-search(date)
+            // if using a Splay tree, do splaying here 
+            for each Event in node's SLL 
+                display Event
+        }
+};
+
+Soln. comment on scenario 2: use a vector that is sorted by date storing groups of events. Using binary search, this can be searched in logarithmic
+time. Reduces overhead of balanced BST. 
+
+5b) To implement this function, I would use a map that associates words with the events whose descriptions contain that word. This would be built in
+the following manner:
+
+Each time an event is added
+for each word in the event's description
+    see if the word is in the map, if not:
+        create a new mapping from that word to a singly linked list full of events 
+    if it is there:
+        insert the event into the word's SLL in sorted order
+
+Note: if using this structure concurrently with the structure(s) used in either of the scenarios in part a, it would be beneficial to associate the
+word with a list of pointers to Events. That way, the data won't be copied between the bst/vector in part a and the hash table here in part b. Only
+the pointers will be copied which is a lot less work/space than the full Event structure. 
+    
+Runtime of findByKeyword(word): 
+
+In class, we used the string hashing algorithm from Donald Knuth which performed quite well on strings and had a low collision rate. The runtime
+of the algorithm was independent of the size of the table and only depended on the length of the word. Given the low collision rate (and therefore
+bucket size in the table) and size-independent hash function, it will be constant time to access a given word from the hash table. Once the word
+has been retrieved, one can simply loop over the sorted associated SLL to display all Events that have the word in their description. Since the 
+N = no. of associated/matching events, that means through a hash tabl, findByKeyword() is O(N).
+
+The following data structures could be ruled out immediately: stack (no need for LIFO ordering), queue (no need for FIFO ordering), grid (no need
+for 2d array representation) and priority queue (no need for priority based ordering and max/min extraction only). 
+
+The remaining data structures - vector and set/balanced bst - can only provide at best O(log(W)) where W = the no. of unique words from the descriptions
+of all the events in the calendar. In the case of vector, the vector would have to be sorted. Therefore, once could not get the overal findByKeyword()
+operation to be O(N). Lastly, while it is true that a hash table may have extra contiguous memory used up, the strength of the provided hash function
+from Knuth will hopefully reduce the likelihood of extra space and a good distribution of the input hashes across the hash table.
+
+Memory used by hash-table based findByKeyword(): 
+
+As mentioned before, in the best case the table will have a slot for each unique word in the combination of the descriptions of all the Events. 
+However, since the table doesn't minimize its space to just that (to avoid collisions), the hash table will likely be using up more space. A sorted
+vector, while it is unable to perform better than logarithmic time, can allocate just the right amount of space for the number of words, eliminating
+waste. Similarly, a balanced bst/set can do the same, dynamically allocating memory as needed. However, in that case, pointer overhead becomes an
+issue as it almost doubles the needed memory. An english word has an average length of 8 letters and in an 8 character string that turns out to be 
+about an 8 byte average memory allocation for a word. However, since each bst node holds 2 4 byte pointers, a node allocates double the amount of space
+needed. This may turn out to be less than the extra memory a hash table keeps, making it not much worse in terms of space. It has already been
+discussed that the hash table is superior in terms of runtime. 
+
+Ease of coding/Scalability: 
+
+Since we already know of a good hash function for strings from lecture, this structure would not be too difficult to implement. If one were to use
+singly linked lists for the buckets and a sorted SLL for the collection of matching events, this reduces the amount of pointers (and pointer overhead)
+as well.
+
+General Implementation/Pseudocode:
+
+class Calendar {
+    private:
+        // NOTE: this node type is for the list of Events in the map. The underlying bucket node type is assumed to be part of the map implementation
+        struct nodeT {
+            nodeT *next;
+            Event e; 
+        };
+
+        map<string, nodeT*> keywordLookup;
+
+    public: 
+        findByKeyword(word) {
+            if keywordLookup.find(word) == keywordLookup.end() 
+                do nothing, word not found 
+            otherwise 
+                make a node copy of head of event list 
+                while node != NULL do
+                    display node data (event)
+                    node = node->next
+        }
+
+};
+
+5c) I mentioned the use of pointers to share data in 5b, in that case between the associated data structures used to optimize the various functions
+in Calendar. Neither of those functions edited the Event data so there was no worry of a failure of updates to take effect through the Calendar class.
+However, in the case of recurring events, we need the effect of an update on one repeated event to carry over to all the other events that are part
+of the repetition. Therefore, this is another reason as to why pointers should be used. Suppose the Calendar was re-implemented so that all the 
+data structures that associated either a word or date with some events now associated the word or date with pointers to those events. Now, consider
+the following algorithm to implement the desired recurring event feature: 
+
+Using the date lookup (which now uses Event pointers), a user marks an event as recurring through a pointer ePTR
+For each date this "recurring" includes (every week, month, year, etc.)
+    associate with the date a copy of ePTR 
+
+Therefore, if a user goes in and updates the event through ePTR with a new description/title/etc. the change will be spread across all the events
+that are part of this recurrence because they are all pointers to the same data. 
+

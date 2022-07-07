@@ -1,0 +1,37 @@
+Selection sort runtime will be s(n) and merge sort is m(n)
+
+s(n) <= 10*n^2 
+m(n) <= 100*nlog_2(n)
+
+3a) For 50 items: 
+
+s(50) = 10*50^2 = 10*2500 = 25,000 
+That is, selection sort would perform approx. 25,000 ops.
+m(50) = 100*50*log_2(50) 
+Since,
+5 < log_2(50) < 6
+25,000 < 5,000log_2(50) < 30,000
+That is, merge sort would perform somewhere between 25,000 and 30,000 ops. 
+
+Therefore, for 50 items, it would be more efficient to use selection sort than merge sort. 
+
+3b) For 100 items:
+
+s(100) = 10*100^2 = 10*10,000 = 100,000
+That is, selection sort would perform approx. 100,000 ops. 
+m(100) = 100*100log_2(100)
+Since,
+7 < log_2(100) < 8
+10,000*7 < 10,000*log_2(100) < 10,000*8
+70,000 < 10,000,log_2(100) < 80,000
+That is, merge sort would perform somewhere between 70,000 and 80,000 ops. 
+
+Therefore, for 100 items, it would be more efficient to use merge sort than selection sort. 
+
+If I was to write a sorting function that would use a hybrid of merge sort and selection sort, I would compare s(n) and m(n) for n being the size of the input. If selection sort,
+despite being O(n^2) performs less ops. due to its constant factors than merge sort, I would use it. Taking the extra memory used by merge sort into account, it may make sense to
+use selection sort in situations where s(n) = m(n) or m(n) is only slightly better. 
+
+From Soln. Manual: or even better, use selection sort within the merge sort implementation. That is, when the recursion has reduced the input size to be small enough based on our
+calculation, switch to using selection sort as opposed to merge sort. 
+

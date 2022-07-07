@@ -1,0 +1,26 @@
+NODES
+SanRafael
+Vallejo
+Berkeley
+Oakland
+SanFrancisco
+Hayward
+Fremont
+SanJose
+Sunnyvale
+PaloAlto
+ARCS
+SanRafael Vallejo 28
+SanRafael Berkeley 30
+Vallejo Berkeley 22
+SanRafael SanFrancisco 19
+Berkeley Oakland 10
+SanFrancisco Oakland 23
+SanFrancisco PaloAlto 25
+Oakland Hayward 18
+Hayward Fremont 17
+PaloAlto Fremont 21
+PaloAlto Sunnyvale 15
+Sunnyvale Fremont 13
+Sunnyvale SanJose 11
+SanJose Fremont 14

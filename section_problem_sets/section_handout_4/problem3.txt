@@ -1,0 +1,121 @@
+Given the following data base construction: 
+
+struct bookT {
+    string author; 
+    string title;
+    string publisher;
+    ...
+};
+
+map<string, vector<bookT>> authorLookup; 
+map<string, vector<bookT>> titleLookup;
+map<string, vector<bookT>> publisherLookup;
+
+Suppose that there is a book (stored in a bookT) with the following information: 
+
+author="Alex" 
+title="LOTR"
+publisher="Pearson"
+...
+
+In authorLookup, there would be an entry that looks like this (I will enclose the vector of bookT structures in curly brackets and each individual bookT in bars):
+
+< "Alex", {|"Alex", "LOTR", "Pearson", ...|, |"Alex", "Hobbit", "Springer Verlag", ...|} > 
+
+In titleLookup, there would be an entry like this: 
+
+< "LOTR", {|"Alex", "LOTR", "Pearson", ...|, |"Tolkien", "LOTR", "Springer Verlag", ...|} >
+
+In publisherLookup, there would be an entry like this: 
+
+< "Pearson", {|"Alex", "LOTR", "Pearson", ...|, |"Dr. Smith", "Intro. to Probability", "Perason", ...|} >
+
+Suppose now that the correct author name for the book "LOTR" written by "Alex" is "Alexander" and I want to correct it by first 
+looking up the book in titleLookup and then changing the corresponding struct's field. 
+
+titleLookup["LOTR"][0].author = "Alexander"; 
+
+Now, if I looked up this book through authorLookup, using the new name "Alexander", I should get the bookT structure I am looking for. However, I would not because each map has 
+< key, value > pairs where the value is a vector of copies of bookT structures. Thus, the bookT structure would only have been corrected in titleLookup. In the other lookup 
+maps, the corresponding bookT entry would be |"Alex", "LOTR", "Pearson", ...| as before. 
+
+To solve this problem, it may be better to store vectors of pointers as the values in the maps after first creating all the bookT structures in the database. 
+
+First, say we have created the set of bookT structures in the database. For example: 
+
+{|"Alex", "LOTR", "Pearson", ...|, |"Alex", "Hobbit", "Springer Verlag", ...|, |"Tolkien", "LOTR", "Springer Verlag", ...|, |"Dr. Smith", "Intro. to Probability", "Pearson", ...|, etc.}
+
+Second, create the lookup maps where each map now has < key, value > pairs where the key is the lookup (author, title, etc.) and the value is a vector of pointers: 
+
+map<string, vector<bookT*>> authorLookup; 
+map<string, vector<bookT*>> titleLookup;
+map<string, vector<bookT*>> publisherLookup;
+
+This way, if we wish to update a bookT structure (take "LOTR" example again), it will update the stored data in all the lookup maps. This is because each map will contain
+pointers to the same location in memory. Thus, if one lookup map dereferences a pointer to a bookT and updates its data, this update will be shared by all the lookup maps.
+
+Using the same example bookT object |"Alex", "LOTR", "Pearson", ...|, here is what the lookup map entries would like that correspond to it: 
+
+In authorLookup the entry would look like < "Alex", * >
+                                                    |
+                                                    |
+                                                    v
+In titleLookup, the entry would be <"LOTR", *----> |"Alex", "LOTR", "Pearson", ...|
+                                                   ^
+                                                   | 
+In publisherLookup, the entry would be <"Pearson", *>
+
+Now, each map's entry values are vectors with copies of pointers as opposed to copies of the data (which take up a lot more space
+as well). Since all the pointer copies point to the same shared data, one can now update the data among all the maps like so (no 
+matter the specific lookup map that was used to perform the update): 
+
+Say the author update is done through publisherLookup: 
+
+publisherLookup["Pearson"] returns a vector of bookT pointers, the first of which is to the bookT structure we want.
+
+Thus, the structure can be updated by dereferencing the pointer:
+
+publisherLookup["Pearson"][0]->author = "Alexander" 
+
+To see that the update affects all the maps, look up this structure through the title lookup and print the results.  
+
+vector<bookT*> lotrTitles = titleLookup["LOTR"]; // Get all the bookT structures with title="LOTR"
+/*
+Print their data by dereferencing. Since titleLookup stores copies of the pointers in publisherLookup, they point to the same 
+data (which hasn't been copied) which would be illustrated in the printed output. The same would apply to authorLookup.
+*/
+for (int i = 0; i < lotrTitles.size(); i++) { 
+    cout << lotrTitles[i]->author << ' ' << lotrTitles[i]->title << ' ' << lotrTitles[i]->publisher << ' ' << ... << endl;
+}
+
+This would then print: 
+
+Alexander LOTR Pearson ... 
+Tolkien LOTR Springer Verlag ... 
+etc. 
+
+Note however that we would also have to change corresponding the author lookup key because we wouldn't want to still be able to search for "Alex" when the bookT has been updated to being written 
+by "Alexander".
+
+In the previous version, trying to update the desired bookT structure effectively invalidated 2 of the 3 lookup maps (because the 
+data wasn't shared). By switching to  pointers (and shared data), this won't happen as all the maps are kept up to date. THe only 
+way to invalidate a map is by changing the entries in the vector for a map entry. For example, if one were to redirect a pointer 
+to some new block of data instead of changing the shared data, the maps would no longer work together. 
+
+Suppose the edit was done like this: 
+
+// For some reason, construct a new bookT on the heap (with the right data) to replace the old (wrong) one
+bookT* b = new bookT; 
+b.author = "Alexander";
+b.title = "LOTR";
+// copy all the other data into b in this fashion
+titleLookup["LOTR"][0] = b;
+
+Now, it may seem that the data has been updated because a following search in titleLookup would yield the change. However, the
+other maps would still have pointers to the old data and now the lookups would not be compatible (Note: that since these pointers 
+are copies of each other, changing one does not change the other). This method is clearly inefficientin the process of copying 
+and is prone to memory deallocation issues as new heap memory has been allocated. Before, all the heap
+memory would have been allocated at once (in the creation of the set of bookT structures before the maps were even created) and 
+hence could be deallocated in a simple fashion. Now, randomly created extra heap memory would have to be searched for and deleted,
+which may not be easy. 
+

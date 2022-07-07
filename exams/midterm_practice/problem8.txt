@@ -1,0 +1,92 @@
+8a) O(2^N) 
+
+Observe: 
+T(N) = T(0) + T(1) + ... + T(N-1)
+T(N-1) = T(0) + T(1) + ... + T(N - 2)
+Therefore, since T(N) = T(0) + T(1) + ... + T(N-2) + T(N-1)
+T(N) = 2T(N-1)
+Using subsitution method: 
+T(N) = 2T(N-1)
+T(N-1) = 2T(N-2)
+T(N) = 4T(N-2)
+T(N-2) = 2T(N-3)
+T(N) = 8T(N-3)
+And in general, 
+T(N) = (2^k)T(N-k)
+The base case (T(0)) is reached when k=N, therefore this algorithm is O(2^N) like the Towers of Hanoi problem.
+
+8b) Here is the program trace; dashes will separate the stack frames for various methods from the execution of statements in the methods' bodies.
+For Stacks, I will use the following notation:
+
+Suppose S is a Stack with entries s1,...,sn where s1 is on top and sn is on the bottom. I will represent this as S = [s1,...,sn] where the top
+most element is on the left. 
+
+Beginning program.. skipping first few lines of main that prepare salad Stack.
+
+------------------------------------------------------------------
+state of main Stack frame after first 4 lines of main have executed.
+
+salad = [ cucumber, tomato, lettuce ]
+
+------------------------------------------------------------------
+
+Toss(salad) is executed in main.
+
+------------------------------------------------------------------
+state of Toss Stack frame: 
+
+salad is passed by value to Toss as 's' which means a copy of 'salad' is made and stored in 's'
+
+s = [ cucumber, tomato, lettuce ]
+------------------------------------------------------------------
+
+A new Stack called 'tmp' is allocated in Toss.
+
+------------------------------------------------------------------
+state of Toss Stack frame: 
+
+s = [ cucumber, tomato, lettuce ]
+tmp = [ ]
+------------------------------------------------------------------
+
+Using a loop, all the elements of s are popped and pushed into tmp. 
+
+------------------------------------------------------------------
+state of Toss Stack frame: 
+
+s = [ ]
+tmp = [ lettuce, tomato, cucumber ]
+------------------------------------------------------------------
+
+The value of tmp is copied into s 
+
+------------------------------------------------------------------
+state of Toss Stack frame: 
+
+s = [ lettuce, tomato, cucumber ]
+tmp = [ lettuce, tomato, cucumber ]
+------------------------------------------------------------------
+
+Toss exits and main prints & pops the top element of salad which is "cucumber".
+main exits & program finishes.
+
+Summary: Since Toss takes salad by value as s, all edits made to s don't actually affect salad because s is a copy of salad, not a reference or alias.
+
+If one were to change the prototype of Toss as described, Toss would now take salad by reference as s. s is now a reference to salad so any changes
+made to s will also affect salad. Therefore, if this program was executed again with that change, main would print "lettuce" as the reversal done in
+Toss would now affect the salad. 
+
+8c) Selection sort. It maintains a sorted portion at the beginning and chooses the minimum of the remaining choices and puts at the end of the sorted 
+portion. While this does do many comparisons, each student would only have to move their luggage once to their destination and not be bothered again.
+If one were to use insertion sort, the student would have to move their luggage from room to room seeing if they are shorter than the student currently
+occupying the room. When this student finds his spot, all students who are taller than him would have to shift to the right moving their luggage 1
+room down. This process would then repeat when the next student is to be inserted into his room position.
+
+
+
+
+
+
+
+
+

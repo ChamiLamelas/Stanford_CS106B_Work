@@ -1,0 +1,13 @@
+2a) DFS from Lounge: Lounge -> Conservatory -> Ball Room -> Billiards -> Lib -> Hall -> Dining -> Kitchen -> Study 
+2b) BFS from Kitchen: Kitchen -> Ball Room -> Dining -> Study -> Billiards -> Conservatory -> Hall -> Lounge -> Lib
+2c) Dijkstra's from Lounge to Lib: Lounge -> Conservatory -> Billiards -> Library (14 cost)
+2d) 
+Ball Room - Conservatory .
+Ball Room - Billiards .
+Ball Room - Kitchen .
+Kitchen - Study .
+Billiards - Lib .
+Conservatory - Lounge .
+Study - Hall .
+Lounge - Dining .
+

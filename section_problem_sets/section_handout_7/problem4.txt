@@ -1,0 +1,158 @@
+First off, here is are the operations the Deque abstract data type would require: 
+
+Push at the front 
+Pop from the front 
+Push at the back 
+Pop from the back
+
+I believe that it would be more suitable to use a doubly linked list to implement a Deque. This is because a Deque must be able to grow and shrink on both ends. This is
+made difficult when using a singly linked list as described below: 
+
+Runtime/Space Comparison
+------------------------
+
+If one was to use a singly linked list and implement the Deque as so: 
+
+node {
+    pointer to next node 
+    data 
+}
+
+Deque {
+    interface: 
+    // ADT ops. 
+
+    implementation: 
+    // pointer to head node (front of Deque), pointer to tail node (back of Deque)
+}
+
+Suppose there are N elements in the Deque.
+
+Pushing at the front would be O(1) - create a new node for the incoming data, set its next pointer to head, and update head to point to new node 
+Popping at the front would be O(1) - copy what head's next pointer into a temp. variable, free resources claimed by head, and reset head to the temp. variable 
+Pushing at the back would be O(1) - create a new node for the incoming data, set tail's next pointer to it, and update tail to point to the new node 
+Popping at the back would be O(N) - iterate from head to one before tail and store this node as tmp, free resources claimed by tail, and set tail to tmp 
+
+The major drawback with this implementation of Deque is that a singly linked list node cannot track the node before it. Therefore, when trying to shorten the Deque on the tail 
+or back end, one must first loop over the entire list to find the 2nd to last node. 
+
+This problem would be solved by using a doubly linked list to implement the Deque: 
+
+node {
+    pointer to next node
+    pointer to previous node 
+    data 
+}
+
+Deque {
+    inteface: 
+    // ADT ops. 
+
+    implementation: 
+    // pointer to head node (front of Deque), pointer to tail node (back of Deque)
+}
+
+Suppose there are N elements in the Deque.
+Pushing at the front would be O(1) - Pushing at the front would be O(1) - create a new node for the incoming data, set its next pointer to head, update head's previous
+pointer to be the new node, and update head to point to new node 
+Popping at the front would be O(1) - copy what head's next pointer into a temp. variable, free resources claimed by head, reset head to the temp. variable, and set head's prev
+pointer to NULL
+Pushing at the back would be O(1) - create a new node for the incoming data, set this node's previous pointer to tail, set tail's next pointer to the new node, and update tail
+to point to the new node 
+Popping at the back would be O(1) - store tail's previous node in a temporary variable, free tail's resources, set tail to the temporary variable, and set tail's next pointer
+to NULL 
+
+Now, all of the necessary operations defined by the Deque ADT are O(1). 
+
+The one drawback of the doubly linked list implementation is that it uses 2x as much memory for pointer as the singly linked list implementation. However, I believe that
+the doubly linked list's performance benefits outweigh the additional pointer memory overhead. 
+
+A Deque can be used to simulate both a Queue and a Stack. 
+
+Simulating a Stack
+------------------
+
+Stack ADT: 
+    push
+    pop
+    // in LIFO ordering  
+
+If one were using the doubly linked list implementation of the Deque to simulate a Stack, one could write a Stack class like so:
+
+Stack {
+    interface: 
+    push {
+        push at front of deque 
+    }
+    pop {
+        pop at front of deque 
+    }
+
+    implementation: 
+    // a deque field 
+}
+
+Or one could alternatively do:
+
+Stack {
+    interface: 
+    push {
+        push at back of deque
+    }
+    pop {
+        pop at back of deque
+    }
+
+    implementation:
+    // a deque field 
+}
+
+That is, with the DLL implementation, could choose either end because pushing and popping at both ends will be O(1). However, if one were simulating a Stack using a Deque
+that was implemented using a SLL, it would be better to use the push at front and pop at front Deque functions to implement Stack's push and pop. This is because those ops. 
+would then both be O(1). If you decided to use an SLL Deque's push at back and pop at back to implement Stack's push and pop, Stack's pop would be O(N). 
+
+Simulating a Queue
+------------------
+
+Queue ADT:
+    enqueue 
+    dequeue 
+    // in FIFO ordering 
+
+Similary, if one were to implement a Queue using a DLL implemented Deque, one could do: 
+
+Queue {
+    interface:
+    enqueue {
+        push at back of deque 
+    }
+    dequeue {
+        pop from front of deque 
+    }
+
+    implementation:
+    // a deque field 
+}
+
+Or, one could also do: 
+
+Queue {
+    interface: 
+    enqueue {
+        push at front of deque 
+    }
+    dequeue {
+        pop from back of deque 
+    }
+
+    implementation:
+    // a deque field
+}
+
+While the 1st queue implementation using a Deque may follow a real world queue (i.e. person in the front of a line is served first, person in the back - the newest addition
+to the line - has to wait) more than the 2nd implementation, both of them support O(1) enqueue and dequeue operations. However, if one were to use a SLL implemented Deque
+to implement a Queue, one should use the first implementation. Using the 2nd implementation would result in dequeue() becoming O(N) because popping from the back of a
+SLL Deque is O(N).
+
+
+
